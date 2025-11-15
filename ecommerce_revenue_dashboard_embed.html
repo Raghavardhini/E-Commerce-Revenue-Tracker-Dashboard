@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>E-commerce Revenue Tracker Dashboard</title>
+  <style>
+    :root{
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --accent: #0366d6;
+      --muted: #6b7280;
+      --max-width: 1200px;
+      --radius: 12px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+    body{
+      background: linear-gradient(180deg,#f7f9fc 0%, var(--bg) 100%);
+      color:#0f172a;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .shell{
+      width:100%;
+      max-width:var(--max-width);
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow: 0 10px 30px rgba(12, 20, 40, 0.08);
+      overflow:hidden;
+      min-height:640px;
+      display:flex;
+      flex-direction:column;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:20px 24px;
+      border-bottom:1px solid #eef2f7;
+      gap:12px;
+    }
+
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#5ad1ff);
+      display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:18px;
+      box-shadow: 0 4px 12px rgba(3,102,214,0.12);
+    }
+    h1{font-size:16px;margin:0}
+    p.subtitle{margin:0;color:var(--muted);font-size:13px}
+
+    /* simple internal navigation (for presenter) */
+    nav{display:flex;gap:8px;align-items:center}
+    button.btn{
+      background:transparent;border:1px solid #e6eefb;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600;
+      color:var(--accent);
+    }
+    button.btn:active{transform:translateY(1px)}
+    button.primary{
+      background:var(--accent);color:white;border:none;
+      box-shadow: 0 6px 18px rgba(3,102,214,0.12);
+    }
+
+    main{flex:1;display:grid;grid-template-columns:1fr;align-items:center;justify-items:stretch;padding:28px;gap:20px}
+
+    /* Page card layout */
+    .page{
+      display:none;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:40px;
+    }
+    .page.active{display:flex;flex-direction:column;gap:18px}
+
+    .title{
+      font-size:28px;font-weight:700;
+    }
+    .desc{max-width:900px;color:var(--muted);line-height:1.6;font-size:15px}
+
+    /* Dashboard container (iframe) */
+    .dashboard-wrap{
+      height: calc(100vh - 180px); /* header + padding accounted for */
+      width:100%;
+    }
+    iframe.dashboard{
+      width:100%;
+      height:100%;
+      border:0;
+      border-radius:10px;
+      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    /* small footer */
+    footer{
+      padding:12px 20px;border-top:1px solid #eef2f7;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;align-items:center;
+    }
+
+    /* responsive tweaks */
+    @media (max-width:720px){
+      .shell{min-height:560px}
+      .title{font-size:22px}
+      .desc{padding:0 8px}
+      .dashboard-wrap{height:52vh}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell" role="application" aria-label="Revenue Dashboard presentation">
+    <header>
+      <div class="brand">
+        <div class="logo">RM</div>
+        <div>
+          <h1>E-Commerce Revenue Tracker — Dashboard View</h1>
+          <p class="subtitle">Interactive presentation: Title → About → Live dashboard</p>
+        </div>
+      </div>
+
+      <nav aria-label="Presentation controls">
+        <button class="btn" onclick="showPage('title')">Title</button>
+        <button class="btn" onclick="showPage('about')">About</button>
+        <button class="btn primary" onclick="showPage('dashboard')">Open Dashboard</button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Page 1: Title -->
+      <section id="title" class="page active" aria-hidden="false">
+        <div>
+          <div class="title">E-Commerce Revenue Tracker</div>
+          <div class="desc">
+            This project demonstrates a revenue analytics dashboard embedded from IBM Cognos Analytics.
+            Use the "Open Dashboard" button to view the live report. The embedded view hides Cognos' appbar and navbar for a clean presentation.
+          </div>
+        </div>
+      </section>
+
+      <!-- Page 2: About / Project -->
+      <section id="about" class="page" aria-hidden="true">
+        <div>
+          <h2 style="margin:0 0 8px 0">About this dashboard</h2>
+          <p class="desc">
+            Purpose: Visualize revenue trends and KPIs for decision makers. Data sources, filters, and drill-throughs remain available inside the embedded Cognos view.
+            The iframe below points at the "Revenue" subview and uses embedded mode parameters so it can be cleanly placed inside other pages.
+          </p>
+          <p class="desc" style="font-size:13px;margin-top:10px;color:#4b5563">
+            Tip: If your organization requires single sign-on, ensure the user session is authenticated in the browser before loading the iframe.
+          </p>
+        </div>
+      </section>
+
+      <!-- Page 3: Dashboard (iframe) -->
+      <section id="dashboard" class="page" aria-hidden="true" style="align-items:stretch">
+        <div class="dashboard-wrap" style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-weight:700">Live: Revenue — Subview</div>
+            <div style="color:var(--muted);font-size:13px">Embedded view</div>
+          </div>
+
+          <!-- IMPORTANT: Replace the src below if you need extra query params or a different subView -->
+          <iframe
+            class="dashboard"
+            id="cognos-iframe"
+            title="IBM Cognos Analytics — Revenue subview"
+            src="https://us3.ca.analytics.ibm.com/bi/?perspective=dashboard&pathRef=.my_folders%2FDashboard%2Bview%2Bof%2Brevenue&action=view&mode=dashboard&subView=model0000019a7c8be639_00000002&nav_filter=true&closeWindowOnLastView=true&ui_appbar=false&ui_navbar=false&shareMode=embedded"
+            allow="clipboard-write; encrypted-media; fullscreen"
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation-by-user-activation"
+          ></iframe>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div>Prepared for presentation</div>
+      <div>Built: <strong id="buildDate"></strong></div>
+    </footer>
+  </div>
+
+  <script>
+    // small script to switch pages without reloading
+    function showPage(id) {
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(p => {
+        if (p.id === id) {
+          p.classList.add('active');
+          p.setAttribute('aria-hidden','false');
+        } else {
+          p.classList.remove('active');
+          p.setAttribute('aria-hidden','true');
+        }
+      });
+
+      // If dashboard page shown, focus the iframe for keyboard interactions
+      if (id === 'dashboard') {
+        const ifr = document.getElementById('cognos-iframe');
+        // try to focus (may be blocked by cross-origin rules)
+        try { ifr.focus(); } catch (e) { /* ignore */ }
+      }
+    }
+
+    // show today's date in footer
+    document.getElementById('buildDate').textContent = new Date().toLocaleDateString();
+
+    // Optional: keyboard navigation (← previous, → next)
+    const order = ['title','about','dashboard'];
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        const active = document.querySelector('.page.active').id;
+        const idx = order.indexOf(active);
+        let nextIdx = idx;
+        if (e.key === 'ArrowRight') nextIdx = Math.min(order.length - 1, idx + 1);
+        if (e.key === 'ArrowLeft') nextIdx = Math.max(0, idx - 1);
+        showPage(order[nextIdx]);
+      }
+    });
+  </script>
+</body>
+</html>
